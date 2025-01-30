@@ -6,7 +6,8 @@ import Processor from './Processor.js';
  * Handles the processing of rows in Markdown tables.
  */
 class TableRowProcessor extends Processor {
-  protected constructProperties(node: RootContent): Record<string, string> {
+  protected constructProperties(_node: RootContent): Record<string, string> {
+    void _node;
     return {};
   }
 

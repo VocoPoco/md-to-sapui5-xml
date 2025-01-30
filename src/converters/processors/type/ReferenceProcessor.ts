@@ -23,7 +23,7 @@ abstract class ReferenceProcessor extends Processor {
   }
 
   public constructProperties(node: RootContent): Record<string, string> {
-    const identifier = 'identifier' in node ? (node as any).identifier : '';
+    const identifier = 'identifier' in node ? node.identifier : '';
     const line = node.position?.start.line;
 
     if (identifier) {
