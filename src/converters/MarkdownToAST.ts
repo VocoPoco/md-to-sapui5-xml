@@ -8,15 +8,13 @@ import Converter from './Converter.js';
  * Converts Markdown content into an Abstract Syntax Tree (AST) using Remark.
  */
 class MarkdownToASTConverter extends Converter<string, Root> {
-  private readonly gfmOptions: Record<string, any>;
+  private readonly options: Partial<Record<string, boolean>>;
 
-  constructor(gfmOptions?: Record<string, any>) {
+  constructor() {
     super();
-    this.gfmOptions = gfmOptions ?? {
-      plugins: {
-        table: true,
-        footnote: true,
-      },
+    this.options = {
+      table: true,
+      footnote: true,
       singleTilde: false,
       tableCellPadding: true,
     };
@@ -32,7 +30,7 @@ class MarkdownToASTConverter extends Converter<string, Root> {
     try {
       return remark()
         .use(remarkParse)
-        .use(remarkGfm, this.gfmOptions)
+        .use(remarkGfm, this.options)
         .parse(content) as Root;
     } catch (error) {
       throw new Error(`Markdown parsing failed: ${(error as Error).message}`);

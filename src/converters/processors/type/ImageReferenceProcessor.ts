@@ -8,7 +8,7 @@ class ImageReferenceProcessor extends ReferenceProcessor {
   protected extractAdditionalProperties(
     node: RootContent,
   ): Record<string, string> {
-    const alt = 'alt' in node ? (node as any).alt : '';
+    const alt = 'alt' in node && typeof node.alt === 'string' ? node.alt : '';
 
     return { value: alt };
   }
