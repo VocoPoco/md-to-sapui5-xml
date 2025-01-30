@@ -1,6 +1,6 @@
 {
   "name": "md-to-sapui5-xml",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "Convert Markdown to SAPUI5 XML",
   "main": "dist/src/index.ts",
