@@ -20,7 +20,7 @@ const config: JestConfigWithTsJest = {
   testEnvironment: 'node',
   collectCoverage: true,
   coverageDirectory: 'coverage',
-  coveragePathIgnorePatterns: ['/node_modules/', '/dist/'],
+  coveragePathIgnorePatterns: ['/node_modules/', '/lib/'],
 };
 
 export default config;
