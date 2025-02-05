@@ -16,7 +16,7 @@
     "prepare": "npm run build"
   },
   "bin": {
-    "md-to-sapui5-xml": "./lib/cli.js"
+    "md-to-sapui5-xml": "./lib/bin/cli.js"
   },
   "keywords": [
     "markdown",
