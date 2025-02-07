@@ -1,5 +1,4 @@
-#!/usr/bin/env ts-node
-import { convertMarkdownToXml } from 'src/index.js';
+import { convertMarkdownToXml } from '../src/index.js';
 
 const [, , inputFilePath, outputDir] = process.argv;
 
