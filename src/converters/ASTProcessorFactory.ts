@@ -31,9 +31,9 @@ class ProcessorFactory {
     delete: new SpecialTextProcessor(
       '  <FormattedText htmlText="&lt;s>My Column&lt;/s>" />',
     ),
-    code: new CodeProcessor(
-      '<code:CodeEditor editable="false" lineNumbers="false" type="{lang}" value="{value}" />',
-    ),
+    // code: new CodeProcessor(
+    //   '<code:CodeEditor editable="false" lineNumbers="false" type="{lang}" value="{value}" />',
+    // ),
     thematicBreak: new StaticProcessor("<ToolBar width='100%' height='1px'/>"),
     link: new LinkProcessor(
       '<Link text="{value}" href="{url}" tooltip="{title}"/>',
