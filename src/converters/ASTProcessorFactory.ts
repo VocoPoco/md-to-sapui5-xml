@@ -32,7 +32,7 @@ class ProcessorFactory {
       '  <FormattedText htmlText="&lt;s>My Column&lt;/s>" />',
     ),
     // code: new CodeProcessor(
-    // '<code:CodeEditor editable="false" lineNumbers="false" type="{lang}" value="{value}" />',
+    //   '<code:CodeEditor editable="false" lineNumbers="false" type="{lang}" value="{value}" />',
     // ),
     thematicBreak: new StaticProcessor("<ToolBar width='100%' height='1px'/>"),
     link: new LinkProcessor(

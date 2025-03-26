@@ -8,7 +8,7 @@ const XML_TEMPLATE = {
     xmlns:code="sap.ui.codeeditor"
     core:require="{
       formatter: 'com/thesistues/ui5app/model/formatter'
-    }'">
+    }">
 
     <Page title="{i18n>appTitle}" id="page">
       <content>`,
