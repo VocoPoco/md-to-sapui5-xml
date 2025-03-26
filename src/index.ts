@@ -4,6 +4,8 @@ import path from 'path';
 import ASTToSapui5XML from './converters/ASTToSapui5XML.js';
 import MarkdownToASTConverter from './converters/MarkdownToAST.js';
 import FileManager from './utils/FileManager.js';
+import NavigationFragmentGenerator from './converters/NavFragmentGenerator.js';
+import concatenateXML from './utils/xmlConcatenator.js';
 
 /**
  * Converts a Markdown file to SAPUI5 XML.
@@ -14,6 +16,8 @@ import FileManager from './utils/FileManager.js';
 export async function convertMarkdownToXml(
   markdownFilePath: string,
   outputDir: string,
+  withNavigation: boolean,
+  controllerPath: string,
 ) {
   assert(
     typeof markdownFilePath === 'string' && markdownFilePath.trim() !== '',
@@ -38,11 +42,26 @@ export async function convertMarkdownToXml(
   const xmlConverter = new ASTToSapui5XML();
 
   const ast = await astConverter.convert(markdownContent);
-  const xml = xmlConverter.convert(ast);
+  const wrappedTemplates = xmlConverter.convert(ast);
+
+  const xml = concatenateXML(wrappedTemplates, withNavigation);
 
   const xmlPath = path.join(outputDir, 'Main.view.xml');
 
   await FileManager.saveAsFile(xmlPath, xml);
 
-  return xmlPath;
+  let navPath = '';
+  if (withNavigation) {
+    const navFragmentXml = NavigationFragmentGenerator.generateFragment();
+    navPath = path.join(outputDir, 'NavigationFragment.xml');
+    await FileManager.saveAsFile(navPath, navFragmentXml);
+  }
+
+  let controllerPathSaved = '';
+  if (controllerPath) {
+    const controllerContent = NavigationFragmentGenerator.generateController();
+    controllerPathSaved = controllerPath;
+    await FileManager.saveAsFile(controllerPath, controllerContent);
+  }
+  return { xmlPath, navPath, controllerPath: controllerPathSaved };
 }
