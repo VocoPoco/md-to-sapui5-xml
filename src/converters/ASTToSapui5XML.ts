@@ -1,5 +1,4 @@
 import { Root, RootContent } from 'mdast';
-import { XML_TEMPLATE } from '../templates/xmlTemplate.js';
 import ProcessorUtils from './../utils/ProcessorUtils.js';
 import ProcessorFactory from './ASTProcessorFactory.js';
 import Converter from './Converter.js';
@@ -10,7 +9,7 @@ import ReferenceProcessor from './processors/type/ReferenceProcessor.js';
 /**
  * Converts an AST (Abstract Syntax Tree) into SAPUI5 XML format.
  */
-class ASTToSapui5XML extends Converter<Root, string> {
+class ASTToSapui5XML extends Converter<Root, string[]> {
   private readonly formatProcessor: FormatProcessor;
   private readonly processorFactory: typeof ProcessorFactory;
 
@@ -46,13 +45,13 @@ class ASTToSapui5XML extends Converter<Root, string> {
    * @param ast - The root AST node.
    * @returns The formatted SAPUI5 XML.
    */
-  public convert(ast: Root): string {
+  public convert(ast: Root): string[] {
     ast.children.forEach((child) => this.processNode(child));
 
     this._resolveReferences();
 
     const wrappedTemplates = this.formatProcessor.wrapTemplates();
-    return `${XML_TEMPLATE.top}\n${wrappedTemplates.join('\n')}\n${XML_TEMPLATE.bottom}`;
+    return wrappedTemplates;
   }
 
   /**
