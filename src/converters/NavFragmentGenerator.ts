@@ -1,5 +1,5 @@
-import XML_TEMPLATE from '../templates/xmlTemplate';
-import NavFragmentHandler from './processors/NavFragmentHandler';
+import XML_TEMPLATE from '@src/templates/xmlTemplate.js';
+import NavFragmentHandler from './processors/NavFragmentHandler.js';
 
 /**
  * Generates an SAPUI5 fragment XML containing navigation links to headings.
