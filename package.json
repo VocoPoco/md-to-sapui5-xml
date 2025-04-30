@@ -9,14 +9,14 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
-    "start": "npm run build && node ./lib/bin/cli.js",
+    "start": "npm run build && node ./lib/bin/md-to-sapui5-xml.js",
     "lint-fix": "eslint --fix .",
     "lint": "eslint src",
     "test": "jest",
     "prepare": "npm run build"
   },
   "bin": {
-    "md-to-sapui5-xml": "./lib/bin/cli.js"
+    "md-to-sapui5-xml": "./lib/bin/md-to-sapui5-xml.js"
   },
   "keywords": [
     "markdown",
