@@ -1,4 +1,4 @@
-import XML_TEMPLATE from '@src/templates/xmlTemplate';
+import XML_TEMPLATE from '../templates/xmlTemplate.js';
 
 /**
  * Concatenates the XML templates with or without the navigation fragment.
