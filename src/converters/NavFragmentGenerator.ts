@@ -1,4 +1,4 @@
-import XML_TEMPLATE from '@src/templates/xmlTemplate.js';
+import XML_TEMPLATE from '../templates/xmlTemplate.js';
 import NavFragmentHandler from './processors/NavFragmentHandler.js';
 
 /**
