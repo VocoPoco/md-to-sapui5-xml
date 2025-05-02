@@ -17,7 +17,11 @@ class NavigationFragmentGenerator {
         (heading) => `
           <CustomListItem>
             <HBox>
-              <Link text="${heading.text}" press="onNavigateTo" customData:Key="${heading.id}" />
+              <Link text="${heading.text}" press="onNavigateTo">
+                  <customData>
+                    <core:customData key="${heading.id}"/>
+                </customData>
+              </Link>
             </HBox>
           </CustomListItem>
         `,
