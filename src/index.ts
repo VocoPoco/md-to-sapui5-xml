@@ -53,7 +53,7 @@ export async function convertMarkdownToXml(
   let navPath = '';
   if (withNavigation) {
     const navFragmentXml = NavigationFragmentGenerator.generateFragment();
-    navPath = path.join(outputDir, 'NavigationFragment.xml');
+    navPath = path.join(outputDir, 'NavigationFragment.fragment.xml');
     await FileManager.saveAsFile(navPath, navFragmentXml);
   }
 
