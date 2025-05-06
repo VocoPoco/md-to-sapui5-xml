@@ -9,12 +9,13 @@ class HeadingProcessor extends Processor {
   public constructProperties(node: RootContent): Record<string, string> {
     const depth = 'depth' in node ? `H${node.depth}` : '';
     const value = this._extractChildValue(node);
+    const id = value.toLowerCase().replace(/\s+/g, '-');
 
-    if (depth && value) {
-      NavFragmentHandler.addHeading(depth, value);
+    if (depth && value && id) {
+      NavFragmentHandler.addHeading(depth, value, id);
     }
 
-    return { depth, value };
+    return { depth, value, id };
   }
 
   private _extractChildValue(node: RootContent): string {
