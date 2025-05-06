@@ -3,7 +3,7 @@ import Processor from './Processor.js';
 import NavFragmentHandler from '../NavFragmentHandler.js';
 
 /**
- * Processor for link nodes
+ * Processor for title nodes
  */
 class HeadingProcessor extends Processor {
   public constructProperties(node: RootContent): Record<string, string> {
