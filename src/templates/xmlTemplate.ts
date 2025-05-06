@@ -42,9 +42,11 @@ const XML_TEMPLATE = {
 
     export default class Main extends Controller {
       public onNavigateTo(oEvent: UI5Element): void {
-        const key = oEvent.getSource().data("Key") as string;
+        const oLink = oEvent.getSource(); 
+        const key = oLink.getCustomData()[0].getValue() as string;
+
         const oPage = this.getView()?.byId("page") as Page;
-        const oHeading = this.getView()?.byId(key);
+        const oHeading = this.getView()?.byId(key); 
 
         if (oPage && oHeading) {
           oPage.scrollToElement(oHeading, 500);
