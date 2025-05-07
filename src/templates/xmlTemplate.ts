@@ -11,18 +11,25 @@ const XML_TEMPLATE = {
     }">
 
     <Page title="{i18n>appTitle}" id="page">
-      <content>`,
+      <content>
+      `,
 
-  bottom: `      </content>
+  bottom: `      
+        </ScrollContainer>
+      </content>
     </Page>
 </mvc:View>`,
 
   navTop: `
     <HBox fitContainer="true">
       <VBox width="20%">
-        <core:Fragment fragmentName="com.thesistues.ui5app.view.NavigationFragment" type="XML"/>
+        <ScrollContainer height="100%" vertical="true">
+          <core:Fragment fragmentName="com.thesistues.ui5app.view.NavigationFragment" type="XML"/>
+        </ScrollContainer>
       </VBox>
-      <VBox width="80%">`,
+      <VBox width="80%">
+        <ScrollContainer height="100%" vertical="true">
+      `,
 
   navBottom: `
       </VBox>
