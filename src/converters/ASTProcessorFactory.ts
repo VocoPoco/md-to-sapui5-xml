@@ -20,7 +20,7 @@ import TextProcessor from './processors/type/TextProcessor.js';
 class ProcessorFactory {
   private static processors: Record<string, Processor> = {
     heading: new HeadingProcessor(
-      '<Title level="{depth}" text="{value}" id="{id}"/>',
+      '<Title level="{depth}" text="{value}" id="{sanitizedId}"/>',
     ),
     text: new TextProcessor('<Text text="{value}" />'),
     emphasis: new SpecialTextProcessor(
