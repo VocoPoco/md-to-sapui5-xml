@@ -35,20 +35,21 @@ const XML_TEMPLATE = {
     '<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:l="sap.ui.layout">',
   navFragmentBottom: '</core:FragmentDefinition>',
   navController: `
-    import Controller from "sap/ui/core/mvc/Controller";
-    import UI5Element from "sap/ui/core/Element";
-    import UIComponent from "sap/ui/core/UIComponent";
-    import Page from "sap/m/Page";
+    import Link from 'sap/m/Link';
+    import Page from 'sap/m/Page';
+    import Event from 'sap/ui/base/Event';
+    import Controller from 'sap/ui/core/mvc/Controller';
 
     export default class Main extends Controller {
-      public onNavigateTo(oEvent: UI5Element): void {
-        const oLink = oEvent.getSource(); 
-        const key = oLink.getCustomData()[0].getValue() as string;
+      public onNavigateTo(oEvent: Event): void {
+        const oLink = oEvent.getSource();
+        const key = (oLink as Link).data('theHeading') as string;
 
-        const oPage = this.getView()?.byId("page") as Page;
-        const oHeading = this.getView()?.byId(key); 
+        const oPage = this.getView()?.byId('page') as Page;
+        const oHeading = this.getView()?.byId(key);
 
         if (oPage && oHeading) {
+          console.log('heading to header');
           oPage.scrollToElement(oHeading, 500);
         }
       }
