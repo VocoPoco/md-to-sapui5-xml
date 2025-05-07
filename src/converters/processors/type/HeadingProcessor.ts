@@ -17,7 +17,7 @@ class HeadingProcessor extends Processor {
       NavFragmentHandler.addId(sanitizedId);
     }
 
-    return { depth, value, id };
+    return { depth, value, sanitizedId };
   }
 
   private _extractChildValue(node: RootContent): string {
