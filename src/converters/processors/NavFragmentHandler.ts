@@ -6,8 +6,7 @@ class NavFragmentHandler {
    * @param level - The heading level.
    * @param text - The heading text content.
    */
-  public static addHeading(level: string, text: string): void {
-    const id = text.toLowerCase().replace(/\s+/g, '-');
+  public static addHeading(level: string, text: string, id: string): void {
     this.headings.push({ level, text, id });
   }
 

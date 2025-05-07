@@ -19,7 +19,7 @@ class NavigationFragmentGenerator {
             <HBox>
               <Link text="${heading.text}" press="onNavigateTo">
                   <customData>
-                    <core:customData key="${heading.id}"/>
+                    <core:customData key="theHeading" value="${heading.id}"/>
                 </customData>
               </Link>
             </HBox>

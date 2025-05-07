@@ -19,7 +19,9 @@ import TextProcessor from './processors/type/TextProcessor.js';
  */
 class ProcessorFactory {
   private static processors: Record<string, Processor> = {
-    heading: new HeadingProcessor('<Title level="{depth}" text="{value}"/>'),
+    heading: new HeadingProcessor(
+      '<Title level="{depth}" text="{value}" id="{id}"/>',
+    ),
     text: new TextProcessor('<Text text="{value}" />'),
     emphasis: new SpecialTextProcessor(
       '<FormattedText htmlText="&lt;em>My Column&lt;/em>" />',
