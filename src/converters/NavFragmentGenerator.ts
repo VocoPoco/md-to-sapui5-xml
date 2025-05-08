@@ -12,7 +12,7 @@ class NavigationFragmentGenerator {
   public static generateFragment(): string {
     const headings = NavFragmentHandler.getHeadings();
 
-    const listItems = headings
+    return headings
       .map(
         (heading) => `
           <CustomListItem>
@@ -27,12 +27,6 @@ class NavigationFragmentGenerator {
         `,
       )
       .join('');
-
-    return (
-      XML_TEMPLATE.navFragmentTop +
-      XML_TEMPLATE.content(listItems) +
-      XML_TEMPLATE.navFragmentBottom
-    );
   }
 
   /**

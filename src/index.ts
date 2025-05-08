@@ -5,26 +5,31 @@ import ASTToSapui5XML from './converters/ASTToSapui5XML.js';
 import MarkdownToASTConverter from './converters/MarkdownToAST.js';
 import FileManager from './utils/FileManager.js';
 import NavigationFragmentGenerator from './converters/NavFragmentGenerator.js';
-import concatenateXML from './utils/xmlConcatenator.js';
+import { renderTemplate } from './utils/TemplateRenderer.js';
 
 /**
  * Converts a Markdown file to SAPUI5 XML.
  * @param markdownFilePath - Path to the Markdown file.
- * @param outputDir - Directory where the XML file will be saved.
+ * @param documentationViewPath - Output path for the Main.view.xml file.
+ * @param withNavigation - Whether to include navigation fragment.
+ * @param navigationFragmentPath - Output path for the NavigationFragment.fragment.xml.
+ * @param navigationControllerPath - Output path for the Main.controller.ts file.
  * @throws {Error} If the input parameters are invalid.
  */
 export async function convertMarkdownToXml(
   markdownFilePath: string,
-  outputDir: string,
+  documentationViewPath: string,
   withNavigation: boolean,
-  controllerPath: string,
+  navigationFragmentPath: string,
+  navigationControllerPath: string,
 ) {
   assert(
     typeof markdownFilePath === 'string' && markdownFilePath.trim() !== '',
     'Invalid markdown file path.',
   );
   assert(
-    typeof outputDir === 'string' && outputDir.trim() !== '',
+    typeof documentationViewPath === 'string' &&
+      documentationViewPath.trim() !== '',
     'Invalid output directory.',
   );
 
@@ -33,9 +38,11 @@ export async function convertMarkdownToXml(
     `Markdown file not found: ${markdownFilePath}`,
   );
 
-  if (!fs.existsSync(outputDir)) {
-    fs.mkdirSync(outputDir, { recursive: true });
+  fs.mkdirSync(path.dirname(documentationViewPath), { recursive: true });
+  if (withNavigation) {
+    fs.mkdirSync(path.dirname(navigationFragmentPath), { recursive: true });
   }
+  fs.mkdirSync(path.dirname(navigationControllerPath), { recursive: true });
 
   const markdownContent = await FileManager.readFile(markdownFilePath);
   const astConverter = new MarkdownToASTConverter();
@@ -44,24 +51,35 @@ export async function convertMarkdownToXml(
   const ast = await astConverter.convert(markdownContent);
   const wrappedTemplates = xmlConverter.convert(ast);
 
-  const xml = concatenateXML(wrappedTemplates, withNavigation);
+  const mainXml = renderTemplate('Main.view.njk', {
+    controller_path: convertPathToNamespace(navigationControllerPath),
+    fragment_path: convertPathToNamespace(navigationFragmentPath),
+    content: wrappedTemplates.join('\n'),
+    with_navigation: withNavigation,
+  });
 
-  const xmlPath = path.join(outputDir, 'Main.view.xml');
+  await FileManager.saveAsFile(documentationViewPath, mainXml);
 
-  await FileManager.saveAsFile(xmlPath, xml);
-
-  let navPath = '';
   if (withNavigation) {
-    const navFragmentXml = NavigationFragmentGenerator.generateFragment();
-    navPath = path.join(outputDir, 'NavigationFragment.fragment.xml');
-    await FileManager.saveAsFile(navPath, navFragmentXml);
+    const navFragmentXml = renderTemplate('NavigationFragment.fragment.njk', {
+      navigation_content: NavigationFragmentGenerator.generateFragment(),
+    });
+    await FileManager.saveAsFile(navigationFragmentPath, navFragmentXml);
   }
 
-  let controllerPathSaved = '';
-  if (controllerPath) {
-    const controllerContent = NavigationFragmentGenerator.generateController();
-    controllerPathSaved = controllerPath;
-    await FileManager.saveAsFile(controllerPath, controllerContent);
-  }
-  return { xmlPath, navPath, controllerPath: controllerPathSaved };
+  const controllerContent = NavigationFragmentGenerator.generateController();
+  await FileManager.saveAsFile(navigationControllerPath, controllerContent);
+
+  return {
+    documentationViewPath,
+    navigationFragmentPath,
+    navigationControllerPath,
+  };
+}
+
+function convertPathToNamespace(filePath: string): string {
+  return filePath
+    .replace(/^.*?webapp\//, 'com/thesistues/ui5app/') // customize the base to look like namespace
+    .replace(/\.[^/.]+$/, '') // remove file extension
+    .replace(/\//g, '.'); // replace "/" with "."
 }
