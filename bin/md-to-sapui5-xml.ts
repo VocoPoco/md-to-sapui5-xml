@@ -17,31 +17,56 @@ if (!fs.existsSync(CONFIG_PATH)) {
 const configRaw = fs.readFileSync(CONFIG_PATH, 'utf-8');
 const config = JSON.parse(configRaw);
 
-const { markdownFile, xmlOutFile, controllerOutFile, withNav } = config;
-if (!markdownFile || !xmlOutFile || !controllerOutFile || !withNav) {
+const {
+  markdownFile,
+  documentationViewPath,
+  navigationControllerPath,
+  navigationFragmentPath,
+  withNav,
+} = config;
+if (
+  !markdownFile ||
+  !documentationViewPath ||
+  !navigationControllerPath ||
+  !navigationFragmentPath ||
+  !withNav
+) {
   throw new Error(
-    'Config must contain "markdownFile", "xmlOutFile", "withNav" and "controllerOutFile" properties.',
+    'Config must contain "markdownFile", "documentationViewPath", "withNav", "navigationFragmentPath" and "navigationControllerPath" properties.',
   );
 }
 if (!fs.existsSync(markdownFile)) {
   throw new Error(`Markdown file not found: ${markdownFile}`);
 }
 
-fs.mkdirSync(path.dirname(xmlOutFile), { recursive: true });
-fs.mkdirSync(path.dirname(controllerOutFile), { recursive: true });
+fs.mkdirSync(path.dirname(documentationViewPath), { recursive: true });
+fs.mkdirSync(path.dirname(navigationFragmentPath), { recursive: true });
+fs.mkdirSync(path.dirname(navigationControllerPath), { recursive: true });
 
-const outDir = path.dirname(xmlOutFile);
-
-convertMarkdownToXml(markdownFile, outDir, withNav, controllerOutFile)
-  .then(({ xmlPath, navPath, controllerPath }) => {
-    console.log(`Conversion successful! XML saved at: ${xmlPath}`);
-    if (withNav) {
-      console.log(`Navigation fragment saved at: ${navPath}`);
-    }
-    if (controllerPath) {
-      console.log(`Controller saved at: ${controllerPath}`);
-    }
-  })
+convertMarkdownToXml(
+  markdownFile,
+  documentationViewPath,
+  withNav,
+  navigationFragmentPath,
+  navigationControllerPath,
+)
+  .then(
+    ({
+      documentationViewPath,
+      navigationFragmentPath,
+      navigationControllerPath,
+    }) => {
+      console.log(
+        `Conversion successful! XML saved at: ${documentationViewPath}`,
+      );
+      if (withNav) {
+        console.log(`Navigation fragment saved at: ${navigationFragmentPath}`);
+      }
+      if (navigationControllerPath) {
+        console.log(`Controller saved at: ${navigationControllerPath}`);
+      }
+    },
+  )
   .catch((error: Error) => {
     console.error('Error during conversion:', error.message);
     process.exit(1);

@@ -1,0 +1,19 @@
+import Link from 'sap/m/Link';
+import Page from 'sap/m/Page';
+import Event from 'sap/ui/base/Event';
+import Controller from 'sap/ui/core/mvc/Controller';
+
+export default class {{ class_name }} extends Controller {
+  public onNavigateTo(oEvent: Event): void {
+    const oLink = oEvent.getSource();
+    const key = (oLink as Link).data('theHeading') as string;
+
+    const oScrollableContainer = this.getView()?.byId('scroll_container') as Page;
+    const oHeading = this.getView()?.byId(key);
+
+    if (oScrollableContainer && oHeading) {
+      console.log('heading to header');
+      oScrollableContainer.scrollToElement(oHeading, 500);
+    }
+  }
+}

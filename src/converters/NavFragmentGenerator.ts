@@ -1,4 +1,3 @@
-import XML_TEMPLATE from '../templates/xmlTemplate.js';
 import NavFragmentHandler from './processors/NavFragmentHandler.js';
 
 /**
@@ -12,7 +11,7 @@ class NavigationFragmentGenerator {
   public static generateFragment(): string {
     const headings = NavFragmentHandler.getHeadings();
 
-    const listItems = headings
+    return headings
       .map(
         (heading) => `
           <CustomListItem>
@@ -27,20 +26,6 @@ class NavigationFragmentGenerator {
         `,
       )
       .join('');
-
-    return (
-      XML_TEMPLATE.navFragmentTop +
-      XML_TEMPLATE.content(listItems) +
-      XML_TEMPLATE.navFragmentBottom
-    );
-  }
-
-  /**
-   * Generates the SAPUI5 Main controller.
-   * @returns The content of the Main.controller.ts file.
-   */
-  public static generateController(): string {
-    return XML_TEMPLATE.navController;
   }
 }
 
