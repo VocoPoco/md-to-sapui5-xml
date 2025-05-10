@@ -67,7 +67,9 @@ export async function convertMarkdownToXml(
     await FileManager.saveAsFile(navigationFragmentPath, navFragmentXml);
   }
 
-  const controllerContent = NavigationFragmentGenerator.generateController();
+  const controllerContent = renderTemplate('Navigation.controller.njk', {
+    class_name: getClassNameFromPath(navigationControllerPath),
+  });
   await FileManager.saveAsFile(navigationControllerPath, controllerContent);
 
   return {
@@ -79,7 +81,14 @@ export async function convertMarkdownToXml(
 
 function convertPathToNamespace(filePath: string): string {
   return filePath
-    .replace(/^.*?webapp\//, 'com/thesistues/ui5app/') // customize the base to look like namespace
+    .replace(/^.*?webapp\//, 'com/thesistues/ui5app/') // TODO: do not hardcode this. Think of a way!
     .replace(/\.[^/.]+$/, '') // remove file extension
     .replace(/\//g, '.'); // replace "/" with "."
+}
+
+function getClassNameFromPath(controllerPath: string): string {
+  return path
+    .basename(controllerPath)
+    .replace('.controller.ts', '')
+    .replace('.ts', '');
 }
