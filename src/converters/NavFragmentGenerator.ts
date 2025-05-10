@@ -1,4 +1,3 @@
-import XML_TEMPLATE from '../templates/xmlTemplate.js';
 import NavFragmentHandler from './processors/NavFragmentHandler.js';
 
 /**
@@ -27,14 +26,6 @@ class NavigationFragmentGenerator {
         `,
       )
       .join('');
-  }
-
-  /**
-   * Generates the SAPUI5 Main controller.
-   * @returns The content of the Main.controller.ts file.
-   */
-  public static generateController(): string {
-    return XML_TEMPLATE.navController;
   }
 }
 
