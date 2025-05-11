@@ -79,11 +79,20 @@ export async function convertMarkdownToXml(
   };
 }
 
-function convertPathToNamespace(filePath: string): string {
-  return filePath
-    .replace(/^.*?webapp\//, 'com/thesistues/ui5app/') // TODO: do not hardcode this. Think of a way!
-    .replace(/\.[^/.]+$/, '') // remove file extension
-    .replace(/\//g, '.'); // replace "/" with "."
+function convertPathToNamespace(
+  filePath: string,
+  baseDir = 'webapp',
+  rootNamespace = 'com.thesistues.ui5app',
+): string {
+  const normalized = filePath.replace(/\\/g, '/');
+
+  const relative = normalized.split(`${baseDir}/`).pop() || '';
+
+  const cleaned = relative
+    .replace(/\.controller|\.fragment/, '') // remove those suffixes
+    .replace(/\.[^/.]+$/, ''); // remove file extension
+
+  return `${rootNamespace}.${cleaned.replace(/\//g, '.')}`;
 }
 
 function getClassNameFromPath(controllerPath: string): string {
