@@ -4,13 +4,13 @@ import MarkdownToASTConverter from './converters/MarkdownToAST.js';
 import FileManager from './utils/FileManager.js';
 import NavigationFragmentGenerator from './converters/NavFragmentGenerator.js';
 import { renderTemplate } from './utils/TemplateRenderer.js';
-import Paths from './types/Paths.js';
+import type Paths from './types/Paths.js';
+import { Root } from 'mdast';
 
 /**
  * Converts a Markdown file to SAPUI5 XML.
  * @param paths - Object that stores all paths for conversion.
  * @param withNavigation - Whether to include navigation fragment.
- * @throws {Error} If the input parameters are invalid.
  */
 export async function convertMarkdownToXml(
   paths: Paths,
@@ -23,33 +23,22 @@ export async function convertMarkdownToXml(
     navigationControllerPath,
   } = paths;
 
-  const markdownContent = await FileManager.readFile(markdownFilePath);
-  const astConverter = new MarkdownToASTConverter();
-  const xmlConverter = new ASTToSapui5XML();
+  const ast = await convertMarkdownToAst(markdownFilePath);
+  const wrappedContent = generateXmlContent(ast);
 
-  const ast = await astConverter.convert(markdownContent);
-  const wrappedTemplates = xmlConverter.convert(ast);
-
-  const mainXml = renderTemplate('Main.view.njk', {
-    controller_path: convertPathToNamespace(navigationControllerPath),
-    fragment_path: convertPathToNamespace(navigationFragmentPath),
-    content: wrappedTemplates.join('\n'),
-    with_navigation: withNavigation,
+  await generateMainView({
+    content: wrappedContent,
+    outputPath: documentationViewPath,
+    controllerPath: navigationControllerPath,
+    fragmentPath: navigationFragmentPath,
+    withNavigation,
   });
-
-  await FileManager.saveAsFile(documentationViewPath, mainXml);
 
   if (withNavigation) {
-    const navFragmentXml = renderTemplate('NavigationFragment.fragment.njk', {
-      navigation_content: NavigationFragmentGenerator.generateFragment(),
-    });
-    await FileManager.saveAsFile(navigationFragmentPath, navFragmentXml);
+    await generateNavigationFragment(navigationFragmentPath);
   }
 
-  const controllerContent = renderTemplate('Navigation.controller.njk', {
-    class_name: getClassNameFromPath(navigationControllerPath),
-  });
-  await FileManager.saveAsFile(navigationControllerPath, controllerContent);
+  await generateController(navigationControllerPath);
 
   return {
     documentationViewPath,
@@ -58,25 +47,86 @@ export async function convertMarkdownToXml(
   };
 }
 
-function convertPathToNamespace(
-  filePath: string,
-  baseDir = 'webapp',
-  rootNamespace = 'com.thesistues.ui5app',
-): string {
-  const normalized = filePath.replace(/\\/g, '/');
-
-  const relative = normalized.split(`${baseDir}/`).pop() || '';
-
-  const cleaned = relative
-    .replace(/\.controller|\.fragment/, '') // remove those suffixes
-    .replace(/\.[^/.]+$/, ''); // remove file extension
-
-  return `${rootNamespace}.${cleaned.replace(/\//g, '.')}`;
+async function convertMarkdownToAst(filePath: string): Promise<Root> {
+  const markdownContent = await FileManager.readFile(filePath);
+  const converter = new MarkdownToASTConverter();
+  return converter.convert(markdownContent);
 }
 
-function getClassNameFromPath(controllerPath: string): string {
-  return path
-    .basename(controllerPath)
-    .replace('.controller.ts', '')
-    .replace('.ts', '');
+function generateXmlContent(ast: Root): string {
+  const xmlConverter = new ASTToSapui5XML();
+  const wrappedTemplates: string[] = xmlConverter.convert(ast);
+  return wrappedTemplates.join('\n');
+}
+
+async function generateMainView(options: {
+  content: string;
+  outputPath: string;
+  controllerPath: string;
+  fragmentPath: string;
+  withNavigation: boolean;
+}): Promise<void> {
+  const mainViewXml = renderTemplate('Main.view.njk', {
+    controller_path: convertPathToNamespace(options.controllerPath),
+    fragment_path: convertPathToNamespace(options.fragmentPath),
+    content: options.content,
+    with_navigation: options.withNavigation,
+  });
+
+  await FileManager.saveAsFile(options.outputPath, mainViewXml);
+}
+
+async function generateNavigationFragment(outputPath: string): Promise<void> {
+  const navFragmentXml = renderTemplate('NavigationFragment.fragment.njk', {
+    navigation_content: NavigationFragmentGenerator.generateFragment(),
+  });
+
+  await FileManager.saveAsFile(outputPath, navFragmentXml);
+}
+
+async function generateController(outputPath: string): Promise<void> {
+  const className = getClassNameFromPath(outputPath);
+
+  const controllerContent = renderTemplate('Navigation.controller.njk', {
+    class_name: className,
+  });
+
+  await FileManager.saveAsFile(outputPath, controllerContent);
+}
+
+export function convertPathToNamespace(
+  filePath: string,
+  baseDir: string = 'webapp',
+  rootNamespace: string = 'com.thesistues.ui5app',
+): string {
+  const absoluteFilePath: string = path.resolve(filePath);
+  const absoluteBasePath: string = path.resolve(baseDir);
+  const relativePath: string = path.relative(
+    absoluteBasePath,
+    absoluteFilePath,
+  );
+
+  const segments: string[] = relativePath.split(path.sep);
+  const lastSegment: string | undefined = segments.pop();
+  if (!lastSegment) {
+    throw new Error(`Invalid file path: ${filePath}`);
+  }
+
+  const nameParts: string[] = lastSegment.split('.');
+  if (nameParts.length > 1) {
+    nameParts.pop();
+  }
+
+  const cleanedNameParts: string[] = nameParts.filter(
+    (part) => part !== 'controller' && part !== 'fragment',
+  );
+
+  segments.push(cleanedNameParts.join(''));
+  return `${rootNamespace}.${segments.join('.')}`;
+}
+
+export function getClassNameFromPath(controllerPath: string): string {
+  const baseName = path.basename(controllerPath);
+  const nameParts = baseName.split('.');
+  return nameParts[0];
 }
