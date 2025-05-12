@@ -10,11 +10,11 @@ const CONFIG_NAME = 'md-to-sapui5-xml.config.json';
 const CONFIG_PATH = path.resolve(process.cwd(), CONFIG_NAME);
 
 const REQUIRED_KEYS = [
-  'markdownFilePath',
-  'documentationViewPath',
+  'paths.markdownFilePath',
+  'paths.documentationViewPath',
+  'paths.navigationFragmentPath',
+  'paths.navigationControllerPath',
   'withNav',
-  'navigationFragmentPath',
-  'navigationControllerPath',
 ];
 
 const config = loadAndValidateConfig(CONFIG_PATH, REQUIRED_KEYS);
