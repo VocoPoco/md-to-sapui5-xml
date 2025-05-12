@@ -1,48 +1,27 @@
-import assert from 'assert';
-import fs from 'fs';
 import path from 'path';
 import ASTToSapui5XML from './converters/ASTToSapui5XML.js';
 import MarkdownToASTConverter from './converters/MarkdownToAST.js';
 import FileManager from './utils/FileManager.js';
 import NavigationFragmentGenerator from './converters/NavFragmentGenerator.js';
 import { renderTemplate } from './utils/TemplateRenderer.js';
+import Paths from './types/Paths.js';
 
 /**
  * Converts a Markdown file to SAPUI5 XML.
- * @param markdownFilePath - Path to the Markdown file.
- * @param documentationViewPath - Output path for the Main.view.xml file.
+ * @param paths - Object that stores all paths for conversion.
  * @param withNavigation - Whether to include navigation fragment.
- * @param navigationFragmentPath - Output path for the NavigationFragment.fragment.xml.
- * @param navigationControllerPath - Output path for the Main.controller.ts file.
  * @throws {Error} If the input parameters are invalid.
  */
 export async function convertMarkdownToXml(
-  markdownFilePath: string,
-  documentationViewPath: string,
+  paths: Paths,
   withNavigation: boolean,
-  navigationFragmentPath: string,
-  navigationControllerPath: string,
 ) {
-  assert(
-    typeof markdownFilePath === 'string' && markdownFilePath.trim() !== '',
-    'Invalid markdown file path.',
-  );
-  assert(
-    typeof documentationViewPath === 'string' &&
-      documentationViewPath.trim() !== '',
-    'Invalid output directory.',
-  );
-
-  assert(
-    fs.existsSync(markdownFilePath),
-    `Markdown file not found: ${markdownFilePath}`,
-  );
-
-  fs.mkdirSync(path.dirname(documentationViewPath), { recursive: true });
-  if (withNavigation) {
-    fs.mkdirSync(path.dirname(navigationFragmentPath), { recursive: true });
-  }
-  fs.mkdirSync(path.dirname(navigationControllerPath), { recursive: true });
+  const {
+    markdownFilePath,
+    documentationViewPath,
+    navigationFragmentPath,
+    navigationControllerPath,
+  } = paths;
 
   const markdownContent = await FileManager.readFile(markdownFilePath);
   const astConverter = new MarkdownToASTConverter();
