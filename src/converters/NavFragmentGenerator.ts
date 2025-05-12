@@ -15,12 +15,14 @@ class NavigationFragmentGenerator {
       .map(
         (heading) => `
           <CustomListItem>
-            <HBox>
-              <Link text="${heading.text}" press="onNavigateTo">
-                  <customData>
-                    <core:customData key="theHeading" value="${heading.id}"/>
-                </customData>
-              </Link>
+            <HBox class="sapUiTinyMargin" width="100%" alignItems="Center" justifyContent="Center">
+              <VBox justifyContent="Center" width="100%">
+                <Link text="${heading.text}" press="onNavigateTo">
+                    <customData>
+                      <core:customData key="theHeading" value="${heading.id}"/>
+                  </customData>
+                </Link>
+              </VBox>
             </HBox>
           </CustomListItem>
         `,
