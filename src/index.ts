@@ -7,6 +7,10 @@ import { renderTemplate } from './utils/TemplateRenderer.js';
 import type Paths from './types/Paths.js';
 import { Root } from 'mdast';
 
+const MAIN_VIEW_TEMPLATE = 'Main.view.njk';
+const NAV_FRAGMENT_TEMPLATE = 'NavigationFragment.fragment.njk';
+const NAV_CONTROLLER_TEMPLATE = 'Navigation.controller.njk';
+
 /**
  * Converts a Markdown file to SAPUI5 XML.
  * @param paths - Object that stores all paths for conversion.
@@ -66,7 +70,7 @@ async function generateMainView(options: {
   fragmentPath: string;
   withNavigation: boolean;
 }): Promise<void> {
-  const mainViewXml = renderTemplate('Main.view.njk', {
+  const mainViewXml = renderTemplate(MAIN_VIEW_TEMPLATE, {
     controller_path: convertPathToNamespace(options.controllerPath),
     fragment_path: convertPathToNamespace(options.fragmentPath),
     content: options.content,
@@ -77,7 +81,7 @@ async function generateMainView(options: {
 }
 
 async function generateNavigationFragment(outputPath: string): Promise<void> {
-  const navFragmentXml = renderTemplate('NavigationFragment.fragment.njk', {
+  const navFragmentXml = renderTemplate(NAV_FRAGMENT_TEMPLATE, {
     navigation_content: NavigationFragmentGenerator.generateFragment(),
   });
 
@@ -87,7 +91,7 @@ async function generateNavigationFragment(outputPath: string): Promise<void> {
 async function generateController(outputPath: string): Promise<void> {
   const className = getClassNameFromPath(outputPath);
 
-  const controllerContent = renderTemplate('Navigation.controller.njk', {
+  const controllerContent = renderTemplate(NAV_CONTROLLER_TEMPLATE, {
     class_name: className,
   });
 
