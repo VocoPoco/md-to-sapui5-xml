@@ -25,7 +25,21 @@ ensurePathsExist(paths);
 ensureMarkdownFileExists(paths.markdownFilePath);
 
 convertMarkdownToXml(paths, withNav)
-  .then(logSuccess(withNav))
+  .then(
+    ({
+      documentationViewPath,
+      navigationFragmentPath,
+      navigationControllerPath,
+    }) => {
+      console.log(`Documentation XML saved at: ${documentationViewPath}`);
+      if (withNav) {
+        console.log(`Navigation panel XML saved at: ${navigationFragmentPath}`);
+      }
+      console.log(
+        `Navigation controller saved at: ${navigationControllerPath}`,
+      );
+    },
+  )
   .catch((error) => {
     console.error('Error during conversion:', error.message);
     process.exit(1);
@@ -70,11 +84,8 @@ function validateConfig(
     const [parent, child] = key.split('.');
     if (child) {
       const parentObj = config[parent];
-      if (
-        typeof parentObj === 'object' &&
-        parentObj !== null &&
-        !(child in parentObj)
-      ) {
+      const isNestedKeyMissing = typeof parentObj === 'object' && parentObj !== null && !(child in parentObj);
+      if (isNestedKeyMissing) {
         return true;
       }
     } else if (!(parent in config)) {
@@ -89,19 +100,6 @@ function validateConfig(
       `Invalid configuration. Missing keys: ${missingKeys.join(', ')}`,
     );
   }
-}
-
-function logSuccess(withNav: boolean) {
-  return ({
-    documentationViewPath,
-    navigationFragmentPath,
-    navigationControllerPath,
-  }: Record<string, string>) => {
-    console.log(`Documentation XML saved at: ${documentationViewPath}`);
-    if (withNav)
-      console.log(`Navigation panel XML saved at: ${navigationFragmentPath}`);
-    console.log(`Navigation controller saved at: ${navigationControllerPath}`);
-  };
 }
 
 function isPathToFile(value: unknown): value is string {
