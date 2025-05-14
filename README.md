@@ -131,8 +131,3 @@ Reference-style link: [GitHub][github]
 
 Inline image:  
 ![SAP Logo](https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg)
-
-Reference-style image:  
-![Placeholder][placeholder]
-
-[placeholder]: https://picsum.photos
