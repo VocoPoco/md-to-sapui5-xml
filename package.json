@@ -10,7 +10,6 @@
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
     "postbuild": "npx cpy \"templates/**/*\" \"lib/templates\"",
-    "start": "npm run build && node ./lib/bin/md-to-sapui5-xml.js",
     "lint-fix": "eslint --fix .",
     "lint": "eslint src",
     "test": "jest",
