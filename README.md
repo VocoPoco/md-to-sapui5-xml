@@ -135,4 +135,4 @@ Inline image:
 Reference-style image:  
 ![Placeholder][placeholder]
 
-[placeholder]: https://via.placeholder.com/150
+[placeholder]: https://picsum.photos
