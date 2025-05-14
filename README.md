@@ -6,6 +6,9 @@
 
 It reads Markdown content and transforms it into structured SAPUI5-compatible XML using a configurable processor pipeline. This tool is ideal for generating documentation views dynamically in SAPUI5 applications.
 
+> 💡 **This README.md file serves as a full Markdown example**.  
+> You can run it directly through the CLI to see how every Markdown type is rendered into SAPUI5.
+
 ---
 
 ## 📦 What the Library Includes
@@ -64,3 +67,72 @@ Create a md-to-sapui5.config.json file in the root of your project (or specify -
 | `paths.navigationFragmentPath`   | string  | (Required if `withNav: true`) Path for the generated Navigation Fragment                |
 | `paths.navigationControllerPath` | string  | (Required if `withNav: true`) Controller path for the navigation-enabled view           |
 | `withNav`                        | boolean | Whether to generate the view with a side navigation panel (`true`) or without (`false`) |
+
+## 📄 Full Markdown Syntax Example
+
+This section demonstrates every Markdown type supported by the library.  
+✅ You can use this README directly to test rendering output.
+
+---
+
+### Headings
+
+# H1 Heading
+
+## H2 Heading
+
+### H3 Heading
+
+#### H4 Heading
+
+##### H5 Heading
+
+###### H6 Heading
+
+---
+
+### Text Formatting
+
+This is a normal paragraph with:
+
+- **Bold**
+- _Italic_
+- **_Bold & Italic_**
+- ~~Strikethrough~~
+
+---
+
+### Links
+
+Inline link: [SAP](https://www.sap.com)
+
+Reference-style link: [GitHub][github]
+
+[github]: https://github.com/
+
+---
+
+### Lists
+
+#### Unordered List
+
+- First item
+- Second item
+  - Nested item
+  - Another nested item
+
+#### Ordered List
+
+1. Step one
+2. Step two
+3. Step three
+
+### Images
+
+Inline image:  
+![SAP Logo](https://upload.wikimedia.org/wikipedia/commons/5/59/SAP_2011_logo.svg)
+
+Reference-style image:  
+![Placeholder][placeholder]
+
+[placeholder]: https://via.placeholder.com/150
