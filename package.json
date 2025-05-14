@@ -9,6 +9,7 @@
   "scripts": {
     "clean": "rimraf lib",
     "build": "npm run clean && tsc",
+    "postbuild": "npx cpy \"templates/**/*\" \"lib/templates\"",
     "start": "npm run build && node ./lib/bin/md-to-sapui5-xml.js",
     "lint-fix": "eslint --fix .",
     "lint": "eslint src",
@@ -31,8 +32,10 @@
     "@types/jest": "^29.5.14",
     "@types/markdown-it": "^14.1.2",
     "@types/node": "^22.7.9",
+    "@types/nunjucks": "^3.2.6",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "cpy-cli": "^5.0.0",
     "eslint": "^8.57.1",
     "eslint-config-airbnb-typescript": "^18.0.0",
     "eslint-config-prettier": "^9.1.0",
@@ -53,6 +56,7 @@
   "dependencies": {
     "@types/mdast": "^4.0.0",
     "@types/unist": "^3.0.3",
+    "nunjucks": "^3.2.4",
     "remark": "^15.0.1",
     "remark-gfm-configurable": "^1.0.0",
     "remark-parse": "^11.0.0",
