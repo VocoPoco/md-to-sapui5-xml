@@ -1,4 +1,5 @@
 import { RootContent } from 'mdast';
+import ProcessorUtils from '../../../utils/ProcessorUtils.js';
 
 /**
  * Abstract base class for processing Markdown AST nodes into formatted output.
@@ -34,21 +35,6 @@ abstract class Processor {
   ): Record<string, string>;
 
   /**
-   * Escapes special characters in the provided value for safe inclusion in XML.
-   *
-   * @param value - The string to escape.
-   * @returns The escaped string.
-   */
-  private escapeSpecialCharacters(value: string): string {
-    return value
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#39;');
-  }
-
-  /**
    * Processes the provided AST node, replacing placeholders in the template with mapped properties.
    *
    * @param node - The AST node to process.
@@ -58,7 +44,9 @@ abstract class Processor {
     const properties = this.constructProperties(node);
 
     if ('value' in properties && this.shouldEscape()) {
-      properties.value = this.escapeSpecialCharacters(properties.value);
+      properties.value = ProcessorUtils.escapeXmlSpecialCharacters(
+        properties.value,
+      );
     }
 
     return Object.entries(properties).reduce(

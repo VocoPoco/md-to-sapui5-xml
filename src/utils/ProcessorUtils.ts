@@ -38,4 +38,19 @@ function _updateTemplatesWithUrl(
   });
 }
 
-export default { resolveReferences };
+/**
+ * Escapes special characters in the provided value for safe inclusion in XML.
+ *
+ * @param value - The string to escape.
+ * @returns The escaped string.
+ */
+function escapeXmlSpecialCharacters(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+export default { resolveReferences, escapeXmlSpecialCharacters };

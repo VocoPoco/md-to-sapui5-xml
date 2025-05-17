@@ -1,6 +1,7 @@
 import { Literal, Parent, RootContent } from 'mdast';
 import Processor from './Processor.js';
 import NavFragmentHandler from '../NavFragmentHandler.js';
+import ProcessorUtils from '../../../utils/ProcessorUtils.js';
 
 /**
  * Processor for title nodes
@@ -13,7 +14,8 @@ class HeadingProcessor extends Processor {
     const sanitizedId = this.sanitizeId(id);
 
     if (depth && value && id) {
-      NavFragmentHandler.addHeading(depth, value, sanitizedId);
+      const escapedValue = ProcessorUtils.escapeXmlSpecialCharacters(value);
+      NavFragmentHandler.addHeading(depth, escapedValue, sanitizedId);
       NavFragmentHandler.addId(sanitizedId);
     }
 
