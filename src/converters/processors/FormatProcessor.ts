@@ -85,14 +85,30 @@ class FormatProcessor {
 
     for (let i = 1; i <= maxKey; i++) {
       if (this._templateMap.has(i)) {
-        const templates = this._templateMap.get(i)!.join('\n');
-        wrappedResults.push(`<HBox>${templates}</HBox>`);
+        const spacedTemplates = this.splitTemplatesWithSpaces(
+          this._templateMap.get(i) ?? [],
+        );
+        wrappedResults.push(`<HBox>${spacedTemplates.join('')}</HBox>`);
       } else {
         wrappedResults.push('<Text text="‎"/>');
       }
     }
 
     return wrappedResults;
+  }
+
+  private splitTemplatesWithSpaces(templates: string[]): string[] {
+    const space = '<Text text=" "/>';
+    const result: string[] = [];
+
+    templates.forEach((template, index) => {
+      result.push(template);
+      if (index < templates.length - 1) {
+        result.push(space);
+      }
+    });
+
+    return result;
   }
 }
 
