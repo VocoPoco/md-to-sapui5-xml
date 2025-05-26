@@ -30,13 +30,14 @@ export async function convertMarkdownToXml(
 
   const ast = await convertMarkdownToAst(markdownFilePath);
   const wrappedContent = generateXmlContent(ast);
+  const hasHeadings = containsHeading(ast);
 
   await generateMainView({
     content: wrappedContent,
     outputPath: documentationViewPath,
     controllerPath: navigationControllerPath,
     fragmentPath: navigationFragmentPath,
-    withNavigation,
+    withNavigation: hasHeadings,
   });
 
   if (withNavigation) {
@@ -139,4 +140,8 @@ export function getClassNameFromPath(controllerPath: string): string {
   const baseName = path.basename(controllerPath);
   const nameParts = baseName.split('.');
   return nameParts[0];
+}
+
+export function containsHeading(ast: Root): boolean {
+  return ast.children.some((node) => node.type === 'heading');
 }
