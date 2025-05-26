@@ -28,6 +28,20 @@ It reads Markdown content and transforms it into structured SAPUI5-compatible XM
 
 ---
 
+Currently, **md-to-sapui5-xml** does **not** support the following Markdown features:
+
+- Highlight
+- Subscript
+- Superscript
+- Heading IDs
+- Definition Lists
+- Emoji
+- Fenced Code Block Info Strings (language labels)
+- Inline Code with complex formatting (beyond basic inline code)
+- Blockquotes with nested complex elements
+
+---
+
 ## ⚙️ Setup & Usage
 
 ### 1. Install the CLI
