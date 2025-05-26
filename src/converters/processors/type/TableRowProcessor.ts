@@ -21,8 +21,8 @@ class TableRowProcessor extends Processor {
    * @returns The formatted SAPUI5 XML string for the row.
    */
   public processDataCells(node: Parent): string {
-    return this.processEachTableCell(node, (hboxContent) =>
-      this.wrapInListItem(hboxContent),
+    return this.processEachTableCell<string>(node, (hboxContent) =>
+      this.wrapInListItem(hboxContent.join('')),
     );
   }
 
@@ -34,9 +34,10 @@ class TableRowProcessor extends Processor {
    * @returns The formatted SAPUI5 XML string for the table header row.
    */
   public processHeaderCells(node: Parent): string {
-    return this.processEachTableCell(node, (hboxContent) =>
-      this.wrapInColumnHeader(hboxContent),
-    );
+    return this.processEachTableCell<string[]>(
+      node,
+      this.wrapInColumnHeaderArray,
+    ).join('');
   }
 
   /**
@@ -48,19 +49,19 @@ class TableRowProcessor extends Processor {
    * @param applyWrapper - A function that wraps the <HBox> in a final container.
    * @returns The full XML string for all cells in the row.
    */
-  private processEachTableCell(
+  private processEachTableCell<T>(
     rowNode: Parent,
-    applyWrapper: (hboxWrappedContent: string) => string,
-  ): string {
-    return rowNode.children
+    applyWrapper: (hboxWrappedContent: string[]) => T,
+  ): T {
+    const allCellNodes = rowNode.children
       .filter((child) => child.type === 'tableCell')
       .map((tableCell) => {
         const content = this.processCellChildren(tableCell as Parent);
         const spaced = this.interleaveSpaces(content);
-        const hbox = this.wrapInHBox(spaced);
-        return applyWrapper(hbox);
-      })
-      .join('');
+        return this.wrapInHBox(spaced);
+      });
+
+    return applyWrapper(allCellNodes);
   }
 
   /**
@@ -123,8 +124,8 @@ class TableRowProcessor extends Processor {
    * @param content - The XML content to wrap.
    * @returns The full <Column> string.
    */
-  private wrapInColumnHeader(content: string): string {
-    return `<Column><header>${content}</header></Column>`;
+  private wrapInColumnHeaderArray(content: string[]): string[] {
+    return content.map((hbox) => `<Column><header>${hbox}</header></Column>`);
   }
 }
 
