@@ -24,13 +24,19 @@ class ProcessorFactory {
     ),
     text: new TextProcessor('<Text text="{value}" />'),
     emphasis: new SpecialTextProcessor(
-      '<FormattedText htmlText="&lt;em>My Column&lt;/em>" />',
+      '<FormattedText htmlText="&lt;em>{value}&lt;/em>" />',
     ),
     strong: new SpecialTextProcessor(
-      '  <FormattedText htmlText="&lt;strong>My Column&lt;/strong>" />',
+      '<FormattedText htmlText="&lt;strong>{value}&lt;/strong>" />',
     ),
     delete: new SpecialTextProcessor(
-      '  <FormattedText htmlText="&lt;s>My Column&lt;/s>" />',
+      '<FormattedText htmlText="&lt;s>{value}&lt;/s>" />',
+    ),
+    inlineCode: new TextProcessor(
+      '<FormattedText htmlText="&lt;code>{value}&lt;/code>" />',
+    ),
+    code: new TextProcessor(
+      '<FormattedText htmlText="&lt;pre>&lt;code>{value}&lt;/code>&lt;/pre>" />',
     ),
     thematicBreak: new StaticProcessor("<ToolBar width='100%' height='1px'/>"),
     link: new LinkProcessor(

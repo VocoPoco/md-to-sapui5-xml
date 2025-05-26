@@ -6,6 +6,11 @@ import Processor from './Processor.js';
  * Processor for list item nodes.
  */
 class ListItemProcessor extends Processor {
+  private prefix: string = '-';
+
+  public setPrefix(prefix: string): void {
+    this.prefix = prefix;
+  }
   public constructProperties(node: RootContent): Record<string, string> {
     return {
       value: this.processChildren(node as Parent),
@@ -24,20 +29,22 @@ class ListItemProcessor extends Processor {
    */
   private processChildren(node: Parent): string {
     if (!node.children || node.children.length === 0) {
-      return '<HBox></HBox>';
+      return `<HBox><Text  class="sapUiTinyMarginBegin sapUiSmallMarginEnd"  text="${this.prefix}" /></HBox>`;
     }
 
     const firstChild = node.children[0] as Parent;
     if (!firstChild.children || firstChild.children.length === 0) {
-      return '<HBox></HBox>';
+      return `<HBox><Text class="sapUiTinyMarginBegin sapUiSmallMarginEnd"  text="${this.prefix}" /></HBox>`;
     }
 
-    return `<HBox>${firstChild.children
+    const innerContent = firstChild.children
       .map((child) => {
         const processor = ProcessorFactory.getProcessor(child.type);
         return processor ? processor.processPlaceholders(child) : '';
       })
-      .join('')}</HBox>`;
+      .join('');
+
+    return `<HBox><Text class="sapUiTinyMarginBegin sapUiSmallMarginEnd"  text="${this.prefix} " />${innerContent}</HBox>`;
   }
 }
 

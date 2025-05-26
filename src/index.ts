@@ -6,6 +6,7 @@ import NavigationFragmentGenerator from './converters/NavFragmentGenerator.js';
 import { renderTemplate } from './utils/TemplateRenderer.js';
 import type Paths from './types/Paths.js';
 import { Root } from 'mdast';
+import { writeFileSync } from 'fs';
 
 const MAIN_VIEW_TEMPLATE = 'Main.view.njk';
 const NAV_FRAGMENT_TEMPLATE = 'NavigationFragment.fragment.njk';
@@ -54,7 +55,12 @@ export async function convertMarkdownToXml(
 async function convertMarkdownToAst(filePath: string): Promise<Root> {
   const markdownContent = await FileManager.readFile(filePath);
   const converter = new MarkdownToASTConverter();
-  return converter.convert(markdownContent);
+  const ast = converter.convert(markdownContent);
+  const outputPath = path.join('./webapp/data', `ast.json`);
+
+  writeFileSync(outputPath, JSON.stringify(ast, null, 2), 'utf-8');
+
+  return ast;
 }
 
 function generateXmlContent(ast: Root): string {
