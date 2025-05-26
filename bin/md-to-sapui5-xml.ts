@@ -10,6 +10,7 @@ const CONFIG_NAME = 'md-to-sapui5-xml.config.json';
 const CONFIG_PATH = path.resolve(process.cwd(), CONFIG_NAME);
 
 const REQUIRED_KEYS = [
+  'appId',
   'paths.markdownFilePath',
   'paths.documentationViewPath',
   'paths.navigationFragmentPath',
@@ -19,12 +20,12 @@ const REQUIRED_KEYS = [
 
 const config = loadAndValidateConfig(CONFIG_PATH, REQUIRED_KEYS);
 
-const { paths, withNav } = config;
+const { appId, paths, withNav } = config;
 
 ensurePathsExist(paths);
 ensureMarkdownFileExists(paths.markdownFilePath);
 
-convertMarkdownToXml(paths, withNav)
+convertMarkdownToXml(appId, paths, withNav)
   .then(
     ({
       documentationViewPath,
@@ -34,10 +35,10 @@ convertMarkdownToXml(paths, withNav)
       console.log(`Documentation XML saved at: ${documentationViewPath}`);
       if (withNav) {
         console.log(`Navigation panel XML saved at: ${navigationFragmentPath}`);
+        console.log(
+          `Navigation controller saved at: ${navigationControllerPath}`,
+        );
       }
-      console.log(
-        `Navigation controller saved at: ${navigationControllerPath}`,
-      );
     },
   )
   .catch((error) => {
@@ -84,7 +85,10 @@ function validateConfig(
     const [parent, child] = key.split('.');
     if (child) {
       const parentObj = config[parent];
-      const isNestedKeyMissing = typeof parentObj === 'object' && parentObj !== null && !(child in parentObj);
+      const isNestedKeyMissing =
+        typeof parentObj === 'object' &&
+        parentObj !== null &&
+        !(child in parentObj);
       if (isNestedKeyMissing) {
         return true;
       }

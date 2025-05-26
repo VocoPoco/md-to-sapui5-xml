@@ -14,10 +14,12 @@ const NAV_CONTROLLER_TEMPLATE = 'Navigation.controller.njk';
 
 /**
  * Converts a Markdown file to SAPUI5 XML.
+ * @param appId - Root namespace (e.g. com.mycompany.myapp)
  * @param paths - Object that stores all paths for conversion.
  * @param withNavigation - Whether to include navigation fragment.
  */
 export async function convertMarkdownToXml(
+  appId: string,
   paths: Paths,
   withNavigation: boolean,
 ) {
@@ -30,21 +32,20 @@ export async function convertMarkdownToXml(
 
   const ast = await convertMarkdownToAst(markdownFilePath);
   const wrappedContent = generateXmlContent(ast);
-  const hasHeadings = containsHeading(ast);
+  const includeNav = withNavigation && containsHeading(ast);
 
-  await generateMainView({
+  await generateMainView(appId, {
     content: wrappedContent,
     outputPath: documentationViewPath,
     controllerPath: navigationControllerPath,
     fragmentPath: navigationFragmentPath,
-    withNavigation: hasHeadings,
+    withNavigation: includeNav,
   });
 
-  if (withNavigation) {
+  if (includeNav) {
+    await generateController(paths.navigationControllerPath);
     await generateNavigationFragment(navigationFragmentPath);
   }
-
-  await generateController(navigationControllerPath);
 
   return {
     documentationViewPath,
@@ -70,16 +71,19 @@ function generateXmlContent(ast: Root): string {
   return wrappedTemplates.join('\n');
 }
 
-async function generateMainView(options: {
-  content: string;
-  outputPath: string;
-  controllerPath: string;
-  fragmentPath: string;
-  withNavigation: boolean;
-}): Promise<void> {
+async function generateMainView(
+  appId: string,
+  options: {
+    content: string;
+    outputPath: string;
+    controllerPath: string;
+    fragmentPath: string;
+    withNavigation: boolean;
+  },
+): Promise<void> {
   const mainViewXml = renderTemplate(MAIN_VIEW_TEMPLATE, {
-    controller_path: convertPathToNamespace(options.controllerPath),
-    fragment_path: convertPathToNamespace(options.fragmentPath),
+    controller_path: convertPathToNamespace(options.controllerPath, appId),
+    fragment_path: convertPathToNamespace(options.fragmentPath, appId),
     content: options.content,
     with_navigation: options.withNavigation,
   });
@@ -107,8 +111,8 @@ async function generateController(outputPath: string): Promise<void> {
 
 export function convertPathToNamespace(
   filePath: string,
+  rootNamespace: string,
   baseDir: string = 'webapp',
-  rootNamespace: string = 'com.thesistues.ui5app',
 ): string {
   const absoluteFilePath: string = path.resolve(filePath);
   const absoluteBasePath: string = path.resolve(baseDir);
