@@ -1,5 +1,7 @@
 <mvc:View
+  {% if with_navigation %}
   controllerName="{{ controller_path }}"
+  {% endif %}
   displayBlock="true"
   xmlns="sap.m"
   xmlns:mvc="sap.ui.core.mvc"
