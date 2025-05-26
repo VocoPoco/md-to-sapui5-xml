@@ -1,5 +1,6 @@
 import Link from 'sap/m/Link';
 import Page from 'sap/m/Page';
+import VBox from 'sap/m/VBox';
 import Event from 'sap/ui/base/Event';
 import Controller from 'sap/ui/core/mvc/Controller';
 
@@ -15,5 +16,27 @@ export default class {{ class_name }} extends Controller {
       console.log('heading to header');
       oScrollableContainer.scrollToElement(oHeading, 500);
     }
+  }
+  onInit() {
+    this._updateSpacerHeight();
+
+    window.addEventListener('resize', this._onResize.bind(this));
+  }
+
+  _onResize() {
+    this._updateSpacerHeight();
+  }
+
+  _updateSpacerHeight() {
+    const height = window.innerHeight - 39;
+
+    const spacer = this.byId('scrollSpacer');
+
+    if (spacer && spacer instanceof VBox) {
+      spacer.setHeight(height + 'px');
+    }
+  }
+  onExit() {
+    window.removeEventListener('resize', this._onResize.bind(this));
   }
 }

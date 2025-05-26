@@ -10,7 +10,16 @@
     <content>
       <HBox fitContainer="true"> {% if with_navigation %} <VBox width="20%">
           <ScrollContainer height="100%" vertical="true">
-            <core:Fragment fragmentName="{{ fragment_path }}" type="XML" />
+            <HBox>
+              <VBox
+                id="scrollSpacer"
+                width="0%"
+                class="scrollSpacer"
+              />
+              <VBox width="100%">
+                <core:Fragment fragmentName="{{ fragment_path }}" type="XML" />
+              </VBox>
+            </HBox>
           </ScrollContainer>
         </VBox>
         {% endif %} <VBox class="sapUiSmallMarginBegin  sapUiSmallMarginTop" width="{% if with_navigation %}80%{% else %}100%{% endif %}">
