@@ -1,4 +1,5 @@
 import DefinitionProcessor from '@src/converters/processors/type/DefinitionProcessor';
+import { Definition } from 'mdast';
 
 describe('DefinitionProcessor', () => {
   let processor: DefinitionProcessor;
@@ -14,7 +15,7 @@ describe('DefinitionProcessor', () => {
       url: 'https://example.com',
     };
 
-    processor.constructProperties(definitionNode as any);
+    processor.constructProperties(definitionNode as Definition);
 
     expect(processor.definitions.get('example')).toBe('https://example.com');
   });
@@ -25,7 +26,7 @@ describe('DefinitionProcessor', () => {
       identifier: 'example',
     };
 
-    processor.constructProperties(definitionNode as any);
+    processor.constructProperties(definitionNode as Definition);
 
     expect(processor.definitions.get('example')).toBe('');
   });
@@ -36,7 +37,7 @@ describe('DefinitionProcessor', () => {
       url: 'https://example.com',
     };
 
-    processor.constructProperties(definitionNode as any);
+    processor.constructProperties(definitionNode as Definition);
 
     expect(processor.definitions.size).toBe(0);
   });
@@ -54,8 +55,8 @@ describe('DefinitionProcessor', () => {
       url: 'https://second.com',
     };
 
-    processor.constructProperties(firstNode as any);
-    processor.constructProperties(secondNode as any);
+    processor.constructProperties(firstNode as Definition);
+    processor.constructProperties(secondNode as Definition);
 
     expect(processor.definitions.get('example')).toBe('https://first.com');
   });

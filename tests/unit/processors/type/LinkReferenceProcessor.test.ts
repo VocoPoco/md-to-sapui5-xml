@@ -1,4 +1,5 @@
 import LinkReferenceProcessor from '@src/converters/processors/type/LinkReferenceProcessor';
+import { LinkReference } from 'mdast';
 
 describe('LinkReferenceProcessor', () => {
   let processor: LinkReferenceProcessor;
@@ -17,7 +18,7 @@ describe('LinkReferenceProcessor', () => {
       position: { start: { line: 5, column: 1 }, end: { line: 5, column: 30 } },
     };
 
-    processor.constructProperties(linkReferenceNode as any);
+    processor.constructProperties(linkReferenceNode as LinkReference);
 
     expect(processor.referenceMap.get('link1')).toBe(
       '<Link text="{value}" href="{url}" />',
@@ -31,7 +32,7 @@ describe('LinkReferenceProcessor', () => {
       children: [{ type: 'text', value: 'Invalid Link' }],
     };
 
-    processor.constructProperties(invalidNode as any);
+    processor.constructProperties(invalidNode as LinkReference);
 
     expect(processor.referenceMap.size).toBe(0);
     expect(processor.lineMap.size).toBe(0);

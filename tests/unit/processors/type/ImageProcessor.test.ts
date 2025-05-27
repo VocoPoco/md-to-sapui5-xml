@@ -1,4 +1,5 @@
 import ImageProcessor from '@src/converters/processors/type/ImageProcessor';
+import { Image } from 'mdast';
 
 describe('ImageProcessor', () => {
   let processor: ImageProcessor;
@@ -21,7 +22,7 @@ describe('ImageProcessor', () => {
       },
     };
 
-    const output = processor.processPlaceholders(imageNode as any);
+    const output = processor.processPlaceholders(imageNode as Image);
 
     expect(output).toBe(
       '<Image src="https://example.com/image.png" alt="An example image" tooltip="Example Image"/>',
@@ -40,7 +41,7 @@ describe('ImageProcessor', () => {
       },
     };
 
-    const output = processor.processPlaceholders(imageNode as any);
+    const output = processor.processPlaceholders(imageNode as Image);
 
     expect(output).toBe(
       '<Image src="https://example.com/image.png" alt="" tooltip=""/>',

@@ -52,7 +52,7 @@ describe('FormatProcessor', () => {
 
     expect(wrappedTemplates).toEqual([
       '<HBox><Text text="Line 1"/></HBox>',
-      '<HBox><Text text="Line 2"/>\n<Text text="Line 2 - Extra"/></HBox>',
+      '<HBox><Text text="Line 2"/><Text text="Line 2 - Extra"/></HBox>',
       '<Text text="‎"/>',
       '<HBox><Text text="Line 4"/></HBox>',
     ]);

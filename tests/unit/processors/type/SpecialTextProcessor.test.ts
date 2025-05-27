@@ -1,3 +1,4 @@
+import type { Emphasis, Strong, Delete, Text } from 'mdast';
 import SpecialTextProcessor from '@src/converters/processors/type/SpecialTextProcessor';
 
 describe('SpecialTextProcessor', () => {
@@ -8,7 +9,7 @@ describe('SpecialTextProcessor', () => {
   });
 
   it('should correctly process an emphasis node', () => {
-    const emphasisNode = {
+    const emphasisNode: Emphasis = {
       type: 'emphasis',
       children: [
         {
@@ -18,7 +19,7 @@ describe('SpecialTextProcessor', () => {
             start: { line: 12, column: 4, offset: 140 },
             end: { line: 12, column: 16, offset: 152 },
           },
-        },
+        } as Text,
       ],
       position: {
         start: { line: 12, column: 1, offset: 137 },
@@ -26,13 +27,12 @@ describe('SpecialTextProcessor', () => {
       },
     };
 
-    const output = processor.processPlaceholders(emphasisNode as any);
-
+    const output = processor.processPlaceholders(emphasisNode);
     expect(output).toBe('<FormattedText htmlText="italic text"/>');
   });
 
   it('should correctly process a strong node', () => {
-    const strongNode = {
+    const strongNode: Strong = {
       type: 'strong',
       children: [
         {
@@ -42,7 +42,7 @@ describe('SpecialTextProcessor', () => {
             start: { line: 13, column: 4, offset: 160 },
             end: { line: 13, column: 14, offset: 170 },
           },
-        },
+        } as Text,
       ],
       position: {
         start: { line: 13, column: 1, offset: 157 },
@@ -50,13 +50,12 @@ describe('SpecialTextProcessor', () => {
       },
     };
 
-    const output = processor.processPlaceholders(strongNode as any);
-
+    const output = processor.processPlaceholders(strongNode);
     expect(output).toBe('<FormattedText htmlText="bold text"/>');
   });
 
   it('should correctly process a delete node', () => {
-    const deleteNode = {
+    const deleteNode: Delete = {
       type: 'delete',
       children: [
         {
@@ -66,7 +65,7 @@ describe('SpecialTextProcessor', () => {
             start: { line: 14, column: 4, offset: 180 },
             end: { line: 14, column: 24, offset: 200 },
           },
-        },
+        } as Text,
       ],
       position: {
         start: { line: 14, column: 1, offset: 177 },
@@ -74,8 +73,7 @@ describe('SpecialTextProcessor', () => {
       },
     };
 
-    const output = processor.processPlaceholders(deleteNode as any);
-
+    const output = processor.processPlaceholders(deleteNode);
     expect(output).toBe('<FormattedText htmlText="strikethrough text"/>');
   });
 });

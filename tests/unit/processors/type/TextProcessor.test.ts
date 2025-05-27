@@ -1,4 +1,5 @@
 import TextProcessor from '@src/converters/processors/type/TextProcessor';
+import { Text } from 'mdast';
 
 describe('TextProcessor', () => {
   let processor: TextProcessor;
@@ -17,7 +18,7 @@ describe('TextProcessor', () => {
       },
     };
 
-    const output = processor.processPlaceholders(textNode as any);
+    const output = processor.processPlaceholders(textNode as Text);
 
     expect(output).toBe('<Text text="Emphasis, aka italics, with "/>');
   });

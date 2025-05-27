@@ -1,6 +1,7 @@
 import ProcessorFactory from '@src/converters/ASTProcessorFactory';
 import TableRowProcessor from '@src/converters/processors/type/TableRowProcessor';
 import TextProcessor from '@src/converters/processors/type/TextProcessor';
+import { TableRow } from 'mdast';
 
 describe('TableRowProcessor', () => {
   let processor: TableRowProcessor;
@@ -31,7 +32,7 @@ describe('TableRowProcessor', () => {
       ],
     };
 
-    const output = processor.processHeaderCells(tableRowNode as any);
+    const output = processor.processHeaderCells(tableRowNode as TableRow);
 
     expect(output).toBe(
       '<Column><header><Text text="Header 1"/></header></Column>',
@@ -49,7 +50,7 @@ describe('TableRowProcessor', () => {
       ],
     };
 
-    const output = processor.processDataCells(tableRowNode as any);
+    const output = processor.processDataCells(tableRowNode as TableRow);
 
     expect(output).toBe(
       '<ColumnListItem><cells><Text text="Cell 1"/></cells></ColumnListItem>',

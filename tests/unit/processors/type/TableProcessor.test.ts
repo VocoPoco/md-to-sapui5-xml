@@ -1,3 +1,4 @@
+import type { Table, TableRow, TableCell, Text } from 'mdast';
 import ProcessorFactory from '@src/converters/ASTProcessorFactory';
 import TableProcessor from '@src/converters/processors/type/TableProcessor';
 import TableRowProcessor from '@src/converters/processors/type/TableRowProcessor';
@@ -25,37 +26,56 @@ describe('TableProcessor', () => {
   it('should correctly process a table node with header and data rows', () => {
     jest
       .spyOn(TableRowProcessor.prototype, 'processHeaderCells')
-      .mockImplementation(() => {
-        return '<Column><header>Header 1</header></Column>';
-      });
+      .mockReturnValue('<Column><header>Header 1</header></Column>');
     jest
       .spyOn(TableRowProcessor.prototype, 'processDataCells')
-      .mockImplementation(() => {
-        return '<ColumnListItem><cells>Cell 1</cells></ColumnListItem>';
-      });
+      .mockReturnValue(
+        '<ColumnListItem><cells>Cell 1</cells></ColumnListItem>',
+      );
 
-    const tableNode = {
-      type: 'table',
-      children: [
-        { type: 'tableRow', children: [{ type: 'text', value: 'Header 1' }] },
-        { type: 'tableRow', children: [{ type: 'text', value: 'Cell 1' }] },
-      ],
+    const headerText: Text = { type: 'text', value: 'Header 1' };
+    const dataText: Text = { type: 'text', value: 'Cell 1' };
+
+    const headerCell: TableCell = {
+      type: 'tableCell',
+      children: [headerText],
+    };
+    const dataCell: TableCell = {
+      type: 'tableCell',
+      children: [dataText],
     };
 
-    const output = processor.processPlaceholders(tableNode as any);
+    const headerRow: TableRow = {
+      type: 'tableRow',
+      children: [headerCell],
+    };
+    const dataRow: TableRow = {
+      type: 'tableRow',
+      children: [dataCell],
+    };
+
+    const tableNode: Table = {
+      type: 'table',
+      children: [headerRow, dataRow],
+    };
+
+    const output = processor.processPlaceholders(tableNode);
 
     expect(output).toBe(
-      '<Table><columns><Column><header>Header 1</header></Column></columns><items><ColumnListItem><cells>Cell 1</cells></ColumnListItem></items></Table>',
+      '<Table>' +
+        '<columns><Column><header>Header 1</header></Column></columns>' +
+        '<items><ColumnListItem><cells>Cell 1</cells></ColumnListItem></items>' +
+        '</Table>',
     );
   });
 
   it('should handle a table node with no rows', () => {
-    const tableNode = {
+    const emptyTable: Table = {
       type: 'table',
       children: [],
     };
 
-    const output = processor.processPlaceholders(tableNode as any);
+    const output = processor.processPlaceholders(emptyTable);
 
     expect(output).toBe('<Table><columns></columns><items></items></Table>');
   });

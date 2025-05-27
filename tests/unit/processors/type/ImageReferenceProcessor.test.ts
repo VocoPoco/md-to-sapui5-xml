@@ -1,4 +1,5 @@
 import ImageReferenceProcessor from '@src/converters/processors/type/ImageReferenceProcessor';
+import { ImageReference } from 'mdast';
 
 describe('ImageReferenceProcessor', () => {
   let processor: ImageReferenceProcessor;
@@ -17,7 +18,7 @@ describe('ImageReferenceProcessor', () => {
       position: { start: { line: 3, column: 1 }, end: { line: 3, column: 20 } },
     };
 
-    processor.constructProperties(imageReferenceNode as any);
+    processor.constructProperties(imageReferenceNode as ImageReference);
 
     expect(processor.referenceMap.get('image1')).toBe(
       '<Image src="{url}" alt="{value}" />',
@@ -31,7 +32,7 @@ describe('ImageReferenceProcessor', () => {
       alt: 'Invalid Image',
     };
 
-    processor.constructProperties(invalidNode as any);
+    processor.constructProperties(invalidNode as ImageReference);
 
     expect(processor.referenceMap.size).toBe(0);
     expect(processor.lineMap.size).toBe(0);
