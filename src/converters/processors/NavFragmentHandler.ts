@@ -16,7 +16,7 @@ class NavFragmentHandler {
    * @param id - The ID to be added.
    */
   public static addId(id: string): void {
-    this.ids.add(id); // Use Set's add method to handle uniqueness automatically
+    this.ids.add(id);
   }
 
   /**
@@ -32,7 +32,7 @@ class NavFragmentHandler {
    * @returns A Set of IDs.
    */
   public static getIds(): Set<string> {
-    return this.ids; // Return the Set of IDs
+    return this.ids;
   }
 }
 
